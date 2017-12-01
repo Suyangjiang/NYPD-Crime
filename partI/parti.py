@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from __future__ import print_function
 
 import sys, os
@@ -26,10 +27,34 @@ def clean(df, list):
         df = df.where(col(enum).isNotNull())
     return df
 
+def toCSVHelper(data):
+    return ','.join(str(d) for d in data)
+
 # function takes in dataframe and column name and return the counts of each distinct value in the column
-def showCount(df, col, file):
+def showCount(df, col, output):
     dfc = df.groupBy(col).count()
-    file.write('column is: ' + col + '\n')
+    rdd = dfc.map(lambda x: x)
+    rdd1 = rdd.map(lambda x: (x[0], x[1]))
+    lines = rdd1.map(toCSVHelper)
+    # save on hdfs
+    lines.saveAsTextFile(col)
+    # save on dumbo
+    command = "hadoop fs -getmerge " + output + '/' + col + ' ' + col + '.csv'
+    os.system(command)
+
+# function specific for XY coord
+def showCountForXY(df, col, output):
+    dfc = df.groupBy(col).count()
+    rdd = dfc.map(lambda x: x)
+    rdd1 = rdd.map(lambda x: (x[0], x[1]))
+    rdd2 = rdd1.map(lambda x: (int(x[0].replace(',', '')) if x[0] != '' else '', x[1]))
+    lines = rdd2.map(toCSVHelper)
+    # save on hdfs
+    lines.saveAsTextFile(col)
+    # save on dumbo
+    command = "hadoop fs -getmerge " + output + '/' + col + ' ' + col + '.csv'
+    os.system(command)
+
 
 # get stats
 def statistics(df, col, file):
@@ -61,33 +86,43 @@ if __name__ == '__main__':
     list = []
     # get stats of BORO_NM
     statistics(df, 'BORO_NM', f)
+    showCount(df, 'BORO_NM', output)
     list.append('BORO_NM')
     # ADDR_PCT_CD
     statistics(df, 'ADDR_PCT_CD', f)
+    showCount(df, 'ADDR_PCT_CD', output)
     list.append('ADDR_PCT_CD')
     # LOC_OF_OCCUR_DESC
     statistics(df, 'LOC_OF_OCCUR_DESC', f)
+    showCount(df, 'LOC_OF_OCCUR_DESC', output)
     list.append('LOC_OF_OCCUR_DESC')
     # PREM_TYP_DESC
     statistics(df, 'PREM_TYP_DESC', f)
+    showCount(df, 'PREM_TYP_DESC', output)
     list.append('PREM_TYP_DESC')
     # PARKS_NM
     statistics(df, 'PARKS_NM', f)
+    showCount(df, 'PARKS_NM', output)
     list.append('PARKS_NM')
     # HADEVELOPT
     statistics(df, 'HADEVELOPT', f)
+    showCount(df, 'HADEVELOPT', output)
     list.append('HADEVELOPT')
     # X_COORD_CD
     statistics(df, 'X_COORD_CD', f)
+    showCountForXY(df, 'X_COORD_CD', output)
     list.append('X_COORD_CD')
     # Y_COORD_CD
     statistics(df, 'Y_COORD_CD', f)
+    showCountForXY(df, 'Y_COORD_CD', output)
     list.append('Y_COORD_CD')
     # Latitude
     statistics(df, 'Latitude', f)
+    showCount(df, 'Latitude', output)
     list.append('Latitude')
     # Longitude
     statistics(df, 'Longitude', f)
+    showCount(df, 'Longitude', output)
     list.append('Longitude')
     f.close()
     df = clean(df, list)
