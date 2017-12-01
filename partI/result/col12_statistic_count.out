@@ -1,0 +1,3 @@
+('VIOLATION', 'STRING', 'Offense Seriousness', 'VALID', 682126)
+('FELONY', 'STRING', 'Offense Seriousness', 'VALID', 1717265)
+('MISDEMEANOR', 'STRING', 'Offense Seriousness', 'VALID', 3180644)
