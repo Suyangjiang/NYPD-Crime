@@ -1,0 +1,3 @@
+('', 'STRING', 'Other', 'NULL', 7)
+('ATTEMPTED', 'STRING', 'Crime Completeness', 'VALID', 96159)
+('COMPLETED', 'STRING', 'Crime Completeness', 'VALID', 5483869)
