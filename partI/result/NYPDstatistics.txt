@@ -1,0 +1,40 @@
+column is: BORO_NM
+null: 0
+blank: 463
+valid: 5579572
+column is: ADDR_PCT_CD
+null: 0
+blank: 390
+valid: 5579645
+column is: LOC_OF_OCCUR_DESC
+null: 0
+blank: 1223392
+valid: 4356643
+column is: PREM_TYP_DESC
+null: 0
+blank: 35198
+valid: 5544837
+column is: PARKS_NM
+null: 0
+blank: 5567497
+valid: 12538
+column is: HADEVELOPT
+null: 0
+blank: 5302218
+valid: 277817
+column is: X_COORD_CD
+null: 0
+blank: 195868
+valid: 5384167
+column is: Y_COORD_CD
+null: 0
+blank: 195868
+valid: 5384167
+column is: Latitude
+null: 0
+blank: 195868
+valid: 5384167
+column is: Longitude
+null: 0
+blank: 195868
+valid: 5384167
