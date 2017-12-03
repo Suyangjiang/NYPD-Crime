@@ -30,7 +30,7 @@ if __name__ == "__main__":
 		try:
 			if x != datetime.strptime(x, "%m/%d/%Y").strftime('%m/%d/%Y'):
 				raise ValueError
-			mat=re.match('(1[0-2]|0?[1-9])/(3[01]|[12][0-9]|0?[1-9])/(20)(0[6-9]|1[0-6])$', x)
+			mat=re.match('(1[0-2]|0?[1-9])/(3[01]|[12][0-9]|0?[1-9])/((19)([0-9][0-9])|(20)(0[0-9]|1[0-6]))$', x)
 			if mat is not None:
 				return "VALID"
 			else:	
