@@ -42,18 +42,18 @@ def showCount(df, col, output):
     command = "hadoop fs -getmerge " + output + '/' + col + ' ' + col + '.csv'
     os.system(command)
 
-# function specific for XY coord
-def showCountForXY(df, col, output):
-    dfc = df.groupBy(col).count()
-    rdd = dfc.map(lambda x: x)
-    rdd1 = rdd.map(lambda x: (x[0], x[1]))
-    rdd2 = rdd1.map(lambda x: (int(x[0].replace(',', '')) if x[0] != '' else '', x[1]))
-    lines = rdd2.map(toCSVHelper)
+def checkCorresForBORO_NM(df, output):
+    dfc = df.groupBy(['ADDR_PCT_CD', 'BORO_NM']).count()
+    dfcs = dfc.sort(['ADDR_PCT_CD', 'BORO_NM'], ascending=[True, False])
+    rdd = dfcs.map(lambda x: x)
+    rdd1 = rdd.map(lambda x: (x[0], x[1], x[2]))
+    lines = rdd1.map(toCSVHelper)
     # save on hdfs
-    lines.saveAsTextFile(col)
+    lines.saveAsTextFile('BORONADDR')
     # save on dumbo
-    command = "hadoop fs -getmerge " + output + '/' + col + ' ' + col + '.csv'
+    command = "hadoop fs -getmerge " + output + '/' + 'BORONADDR BORONADDR.csv'
     os.system(command)
+
 
 # get stats
 def statistics(df, col, file):
@@ -71,6 +71,7 @@ def statistics(df, col, file):
     line = 'valid: ' + str(dfv.count()) + '\n'
     file.write(line)
 
+
 if __name__ == '__main__':
     if len(sys.argv) != 3:
         print("Usage: spark-submit --packages com.databricks:spark-csv_2.10:1.2.0 parti.py <input> <output>")
@@ -84,6 +85,7 @@ if __name__ == '__main__':
     list = []
     # get stats of BORO_NM
     statistics(df, 'BORO_NM', f)
+    checkCorresForBORO_NM(df, output)
     showCount(df, 'BORO_NM', output)
     list.append('BORO_NM')
     f.close()

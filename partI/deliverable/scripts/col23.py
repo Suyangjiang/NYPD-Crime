@@ -42,19 +42,6 @@ def showCount(df, col, output):
     command = "hadoop fs -getmerge " + output + '/' + col + ' ' + col + '.csv'
     os.system(command)
 
-# function specific for XY coord
-def showCountForXY(df, col, output):
-    dfc = df.groupBy(col).count()
-    rdd = dfc.map(lambda x: x)
-    rdd1 = rdd.map(lambda x: (x[0], x[1]))
-    rdd2 = rdd1.map(lambda x: (int(x[0].replace(',', '')) if x[0] != '' else '', x[1]))
-    lines = rdd2.map(toCSVHelper)
-    # save on hdfs
-    lines.saveAsTextFile(col)
-    # save on dumbo
-    command = "hadoop fs -getmerge " + output + '/' + col + ' ' + col + '.csv'
-    os.system(command)
-
 
 # get stats
 def statistics(df, col, file):

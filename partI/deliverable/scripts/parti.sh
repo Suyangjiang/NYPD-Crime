@@ -4,17 +4,17 @@
 # so we must use a wrapper to explicitly set up the modules environment and load 
 # the relevant modules
 
-hadoop fs -rm -r /user/yournetID/ADDR_PCT_CD
-hadoop fs -rm -r /user/yournetID/BORO_NM
-hadoop fs -rm -r /user/yournetID/HADEVELOPT
-hadoop fs -rm -r /user/yournetID/LOC_OF_OCCUR_DESC
-hadoop fs -rm -r /user/yournetID/Latitude
-hadoop fs -rm -r /user/yournetID/Longitude
-hadoop fs -rm -r /user/yournetID/PARKS_NM
-hadoop fs -rm -r /user/yournetID/PREM_TYP_DESC
-hadoop fs -rm -r /user/yournetID/X_COORD_CD
-hadoop fs -rm -r /user/yournetID/Y_COORD_CD
-hadoop fs -rm -r /user/yournetID/cleaned
+hadoop fs -rm -r /user/hz1076/ADDR_PCT_CD
+hadoop fs -rm -r /user/hz1076/BORO_NM
+hadoop fs -rm -r /user/hz1076/HADEVELOPT
+hadoop fs -rm -r /user/hz1076/LOC_OF_OCCUR_DESC
+hadoop fs -rm -r /user/hz1076/Latitude
+hadoop fs -rm -r /user/hz1076/Longitude
+hadoop fs -rm -r /user/hz1076/PARKS_NM
+hadoop fs -rm -r /user/hz1076/PREM_TYP_DESC
+hadoop fs -rm -r /user/hz1076/X_COORD_CD
+hadoop fs -rm -r /user/hz1076/Y_COORD_CD
+hadoop fs -rm -r /user/hz1076/cleaned
 
 rm -f ADDR_PCT_CD.csv
 rm -f BORO_NM.csv
