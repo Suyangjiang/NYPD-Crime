@@ -42,18 +42,7 @@ def showCount(df, col, output):
     command = "hadoop fs -getmerge " + output + '/' + col + ' ' + col + '.csv'
     os.system(command)
 
-# function specific for XY coord
-def showCountForXY(df, col, output):
-    dfc = df.groupBy(col).count()
-    rdd = dfc.map(lambda x: x)
-    rdd1 = rdd.map(lambda x: (x[0], x[1]))
-    rdd2 = rdd1.map(lambda x: (int(x[0].replace(',', '')) if x[0] != '' else '', x[1]))
-    lines = rdd2.map(toCSVHelper)
-    # save on hdfs
-    lines.saveAsTextFile(col)
-    # save on dumbo
-    command = "hadoop fs -getmerge " + output + '/' + col + ' ' + col + '.csv'
-    os.system(command)
+
 
 
 # get stats
@@ -84,49 +73,9 @@ if __name__ == '__main__':
     sqlContext = SQLContext(sc)
     df = sqlContext.read.format('com.databricks.spark.csv').options(header='true').load(lines)
     list = []
-    # get stats of BORO_NM
-    statistics(df, 'BORO_NM', f)
-    showCount(df, 'BORO_NM', output)
-    list.append('BORO_NM')
-    # ADDR_PCT_CD
-    statistics(df, 'ADDR_PCT_CD', f)
-    showCount(df, 'ADDR_PCT_CD', output)
-    list.append('ADDR_PCT_CD')
     # LOC_OF_OCCUR_DESC
     statistics(df, 'LOC_OF_OCCUR_DESC', f)
     showCount(df, 'LOC_OF_OCCUR_DESC', output)
     list.append('LOC_OF_OCCUR_DESC')
-    # PREM_TYP_DESC
-    statistics(df, 'PREM_TYP_DESC', f)
-    showCount(df, 'PREM_TYP_DESC', output)
-    list.append('PREM_TYP_DESC')
-    # PARKS_NM
-    statistics(df, 'PARKS_NM', f)
-    showCount(df, 'PARKS_NM', output)
-    list.append('PARKS_NM')
-    # HADEVELOPT
-    statistics(df, 'HADEVELOPT', f)
-    showCount(df, 'HADEVELOPT', output)
-    list.append('HADEVELOPT')
-    # X_COORD_CD
-    statistics(df, 'X_COORD_CD', f)
-    showCountForXY(df, 'X_COORD_CD', output)
-    list.append('X_COORD_CD')
-    # Y_COORD_CD
-    statistics(df, 'Y_COORD_CD', f)
-    showCountForXY(df, 'Y_COORD_CD', output)
-    list.append('Y_COORD_CD')
-    # Latitude
-    statistics(df, 'Latitude', f)
-    showCount(df, 'Latitude', output)
-    list.append('Latitude')
-    # Longitude
-    statistics(df, 'Longitude', f)
-    showCount(df, 'Longitude', output)
-    list.append('Longitude')
     f.close()
-    df = clean(df, list)
-    df.write.format('com.databricks.spark.csv').option("header", "true").save('cleaned')
-    command = "hadoop fs -getmerge " + output + "/cleaned cleaned.csv"
-    os.system(command)
     sc.stop()
