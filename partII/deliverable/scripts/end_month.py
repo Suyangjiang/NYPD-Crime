@@ -18,11 +18,11 @@ if __name__ == "__main__":
 	# Remove the header
 	lines = lines.mapPartitions(lambda x: reader(x))
 
-	lines = lines.map(lambda x: (x[1])).map(lambda s: datetime.strptime(s, '%m/%d/%Y'))
+	lines = lines.map(lambda x: (x[3])).map(lambda s: datetime.strptime(s, '%m/%d/%Y')).filter(lambda date: date.year >= 2005)
 	year = lines.map(lambda x: (x.month, 1)).reduceByKey(lambda x, y: x + y).sortBy(lambda x: x[0]).sortBy(lambda x: x[1], False) 
 	year.collect()
 	
-	year.saveAsTextFile("month_count.out")
+	year.saveAsTextFile("end_month.out")
 
 	# Collect the statistics
 	#statistic_count(lines)

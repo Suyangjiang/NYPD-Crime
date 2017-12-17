@@ -11,12 +11,12 @@ from datetime import datetime
 if __name__ == "__main__":
 	
 	# Collect the statistics
-	# def statistic_count(rdd):
-	# 	rdd.map(lambda row: (row, 1)) \
-	# 		.reduceByKey(lambda x, y: x + y) \
-	# 		.sortBy(lambda x: x[1], False) \
-	# 		.map(lambda row: (row[0],row[1])) \
-	# 		.saveAsTextFile("KY_CD_count.out")
+	def statistic_count(rdd):
+		rdd.map(lambda row: (row, 1)) \
+			.reduceByKey(lambda x, y: x + y) \
+			.sortBy(lambda x: x[1], False) \
+			.map(lambda row: (row[0],row[1])) \
+			.saveAsTextFile("KY_CD_count.out")
 
 	sc = SparkContext()
 
@@ -26,10 +26,10 @@ if __name__ == "__main__":
 	# Remove the header
 	# lines = lines.filter(lambda x: x!=header).mapPartitions(lambda x: reader(x))
 	lines = lines.mapPartitions(lambda x: reader(x))
-	lines = lines.map(lambda x: (x[1])).map(lambda s: datetime.strptime(s, '%m/%d/%Y'))
+	lines = lines.map(lambda x: (x[3])).map(lambda s: datetime.strptime(s, '%m/%d/%Y')).filter(lambda date: date.year >= 2005)
 	year = lines.map(lambda x: (x.year, 1)).reduceByKey(lambda x, y: x + y).sortBy(lambda x: x[0]).sortBy(lambda x: x[1], False) 
 	year.collect()
-	year.saveAsTextFile("year_count.out")
+	year.saveAsTextFile("end_year.out")
 
 	# Collect the statistics
 	#statistic_count(lines)
