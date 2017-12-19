@@ -20,12 +20,9 @@ if __name__ == "__main__":
 	lines = lines.mapPartitions(lambda x: reader(x))
 
 	lines = lines.map(lambda x: (x[4])).map(lambda s: datetime.datetime.strptime(s, '%H:%M:%S').time())
-	year = lines.map(lambda x: (x.hour, 1)).reduceByKey(lambda x, y: x + y).sortBy(lambda x: x[0]).sortBy(lambda x: x[1], False) 
-	year.collect()
-	
-	year.saveAsTextFile("end_hour_count.out")
-
-	# Collect the statistics
-	#statistic_count(lines)
+	hour = lines.map(lambda x: (x.hour, 1)).reduceByKey(lambda x, y: x + y).sortBy(lambda x: x[0])
+	hour.collect()
+	hour.map(lambda data: str(data[0]) + ',' + str(data[1]))
+	hour.saveAsTextFile("end_hour_count.out")
 
 	sc.stop()
