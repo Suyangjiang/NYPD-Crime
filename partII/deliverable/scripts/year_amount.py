@@ -10,14 +10,6 @@ from datetime import datetime
 
 if __name__ == "__main__":
 	
-	# Collect the statistics
-	# def statistic_count(rdd):
-	# 	rdd.map(lambda row: (row, 1)) \
-	# 		.reduceByKey(lambda x, y: x + y) \
-	# 		.sortBy(lambda x: x[1], False) \
-	# 		.map(lambda row: (row[0],row[1])) \
-	# 		.saveAsTextFile("KY_CD_count.out")
-
 	sc = SparkContext()
 
 	lines = sc.textFile(sys.argv[1], 1)
@@ -27,11 +19,9 @@ if __name__ == "__main__":
 	# lines = lines.filter(lambda x: x!=header).mapPartitions(lambda x: reader(x))
 	lines = lines.mapPartitions(lambda x: reader(x))
 	lines = lines.map(lambda x: (x[1])).map(lambda s: datetime.strptime(s, '%m/%d/%Y'))
-	year = lines.map(lambda x: (x.year, 1)).reduceByKey(lambda x, y: x + y).sortBy(lambda x: x[0]).sortBy(lambda x: x[1], False) 
+	year = lines.map(lambda x: (x.year, 1)).reduceByKey(lambda x, y: x + y).sortBy(lambda x: x[0])
 	year.collect()
+	year.map(lambda data: str(data[0]) + ',' + str(data[1]))
 	year.saveAsTextFile("year_count.out")
-
-	# Collect the statistics
-	#statistic_count(lines)
 
 	sc.stop()
